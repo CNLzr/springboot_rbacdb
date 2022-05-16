@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
+<body>
+<div id="head_html"></div>
+<h1>
+    用户修改页面
+</h1>
+<table width="80%" border="1px">
+    <tr>
+        <th>用户编号:<span id="id"></span></th>
+    </tr>
+    <tr>
+        <th>
+            <label for="loginId">
+                用户名:
+            </label>
+            <input type="text" name="loginId" id="loginId">
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <label for="loginPwd">
+                用户密码:
+            </label>
+            <input type="password" name="loginPwd" id="loginPwd">
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <label for="name">
+                用户姓名:
+            </label>
+            <input type="text" name="name" id="name">
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <label for="email">
+                邮箱:
+            </label>
+            <input type="text" name="email" id="email">
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <label for="phone">
+                手机号码:
+            </label>
+            <input type="text" name="phone" id="phone">
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <label for="address">
+                地址:
+            </label>
+            <input type="text" name="address" id="address">
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <label for="roleId">角色:</label>
+            <select id="roleId" name="roleId">
+
+            </select>
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <input type="submit" id="btn" value="修改用户">
+        </th>
+    </tr>
+</table>
+</body>
+<script>
+    $(function () {
+        $("#head_html").load("../../html/head.html");
+        // 给修改按钮设置点击事件
+        addEditBtnEvent();
+        // 获取供用户选择的角色列表
+        getRoleList();
+        // 获取被修改用户的信息
+        getUser();
+    });
+    // 获取被修改用户的信息
+    function getUser() {
+        let user_id = sessionStorage.getItem("userId");
+        $.ajax({
+            url:"/users/user/"+user_id,
+            type:"get",
+            dataType:"json",
+            success:function (rest) {
+                console.log(rest);
+                $("#id").text(rest.id);
+                $("#loginId").val(rest.loginId);
+                $("#name").val(rest.name);
+                $("#phone").val(rest.phone);
+                $("#email").val(rest.email);
+                $("#address").val(rest.address);
+            }
+        })
+    }
+    // 修改按钮设置点击事件
+    function addEditBtnEvent() {
+        $("#btn").on("click",function (event) {
+            event.preventDefault();
+            let data = {
+                "id":$("#id").text(),
+                "loginId":$("#loginId").val(),
+                "loginPwd":$("#loginPwd").val(),
+                "name":$("#name").val(),
+                "phone":$("#phone").val(),
+                "email":$("#email").val(),
+                "address":$("#address").val(),
+                "role":{
+                    "id":$("#roleId").val()
+                }
+            };
+            console.log(data);
+            $.ajax({
+                url:"/users/user",
+                method: "put",
+                data:JSON.stringify(data),
+                contentType:"application/json",
+                dataType: "json",
+                success:function (rest) {
+                    console.log(rest);
+                    if(rest.code === 2000){
+                        window.location.href = "/users/listPage";
+                    }
+
+                }
+
+            })
+        })
+    }
+
+    // 获取角色列表
+    function getRoleList() {
+        $.ajax({
+            url: "/roles/list",
+            type:"get",
+            dataType:"json",
+            success:function (rest) {
+                let op = ``;
+                for(let i=0;i<rest.length;i++){
+                    console.log(rest[i]);
+                    let role = rest[i];
+                    op += `<option value="${role.id}">${role.name}</option>`;
+                }
+                $("#roleId").append(op);
+            }
+        });
+    }
+</script>
+</html>

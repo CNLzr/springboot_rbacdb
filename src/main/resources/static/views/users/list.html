@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
+<body>
+<div id="head_html"></div>
+<h1>用户列表页面</h1>
+<hr>
+<a href="/users/addPage">新增</a>
+<table id="role_table" width="80%" border="1px">
+    <tr>
+        <th>用户编号</th>
+        <th>用户登录名</th>
+        <th>用户昵称</th>
+        <th>用户邮箱</th>
+        <th>用户电话</th>
+        <th>用户地址</th>
+        <th>角色编号</th>
+        <th>操作</th>
+    </tr>
+</table>
+</body>
+<script>
+
+    $(function () {
+        $("#head_html").load("../../html/head.html")
+        // 获取用户列表
+        getUserList();
+        // 给删除标签添加点击事件
+        addDelEvent();
+        // 给修改标签添加点击事件
+        addEditEvent();
+        let session = sessionStorage.getItem("user");
+        console.log(JSON.parse(session));
+    });
+
+    // 获取用户列表
+    function getUserList(){
+        $.ajax({
+            url:"/users/list",
+            type:"get",
+            dataType:"json",
+            success:function (rest) {
+                let tag = ``;
+                let list = rest.data;
+                console.log(rest);
+                for(let i=0;i<list.length;i++){
+                    console.log(list[i]);
+                    let user = list[i];
+                    tag += `<tr>
+                                <td>${user.id}</td>
+                                <td>${user.loginId}</td>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td>${user.phone}</td>
+                                <td>${user.address}</td>
+                                <td>${user.role.id}</td>
+                                <td>
+                                    <a href="#" class="del">删除</a>
+                                    <a href="#" class="edit">修改</a>
+                                </td>
+                            </tr>`
+                }
+                $("#role_table").append(tag);
+            }
+        });
+    }
+
+    // 给删除标签添加点击事件
+    function addDelEvent(){
+        $("#role_table").on("click",".del",function (event) {
+            event.preventDefault();
+            let del_id = $(this).parent().parent().children("td").eq(0).text();
+            console.log();
+            $.ajax({
+                url:"/users/user/"+del_id,
+                type: "post",
+                data:{
+                    "_method":"DELETE",
+                },
+                success:function (rest) {
+                    console.log(rest);
+                }
+            })
+        });
+    }
+
+    // 给修改标签添加点击事件
+    function addEditEvent(){
+        $("#role_table").on("click",".edit",function (event) {
+            event.preventDefault();
+            let edit_id = $(this).parent().parent().children("td").eq(0).text();
+            console.log(edit_id);
+            sessionStorage.setItem("userId",edit_id);
+            window.location.href = "/users/editPage/"+edit_id;
+        });
+    }
+
+
+</script>
+</html>

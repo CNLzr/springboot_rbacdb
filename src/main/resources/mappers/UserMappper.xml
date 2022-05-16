@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzr.dao.UserMapper">
+    <resultMap id="userResultMap" type="User">
+        <id property="id" column="user_id"/>
+        <result property="loginId" column="user_loginId"/>
+        <result property="loginPwd" column="user_loginPwd"/>
+        <result property="name" column="user_name"/>
+        <result property="email" column="user_email"/>
+        <result property="phone" column="user_phone"/>
+        <result property="address" column="user_address"/>
+        <association property="role" column="role_id" select="com.lzr.dao.RoleMapper.getById" fetchType="lazy"/>
+    </resultMap>
+    <!-- 获取用户列表 -->
+    <select id="getAll" resultMap="userResultMap" >
+        select * from sys_users
+    </select>
+    <!-- 根据Id获取用户 -->
+    <select id="getById" resultMap="userResultMap">
+        select * from sys_users where user_id = #{id}
+    </select>
+    <!-- 根据角色Id获取用户 -->
+    <select id="getByRoleId" resultMap="userResultMap">
+        select * from sys_users where role_id = #{id}
+    </select>
+    <!-- 根据条件获取用户 -->
+    <select id="getByCondition" parameterType="User" resultMap="userResultMap">
+        select * from sys_users where 1 = 1
+        <if test="id != null">
+            AND user_id = #{id}
+        </if>
+        <if test="loginId != null">
+            AND user_loginId = #{loginId}
+        </if>
+        <if test="loginPwd != null">
+            AND user_loginPwd = #{loginPwd}
+        </if>
+        <if test="name != null">
+            AND user_name = #{name}
+        </if>
+        <if test="email != null">
+            AND user_email = #{email}
+        </if>
+        <if test="phone != null">
+            AND user_phone = #{phone}
+        </if>
+        <if test="address != null">
+            AND user_address = #{address}
+        </if>
+        <if test="role != null">
+            AND role_id = #{role.id}
+        </if>
+    </select>
+    <!--添加用户-->
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        INSERT INTO sys_users
+        (user_loginId,user_loginPwd,user_name,user_email,user_phone,user_address,role_id)
+        VALUES
+        (#{loginId},#{loginPwd},#{name},#{email},#{phone},#{address},#{role.id})
+    </insert>
+    <!--修改用户-->
+    <update id="setUser" parameterType="User">
+        UPDATE sys_users
+        <set>
+            <if test="loginId != null">
+                user_loginId = #{loginId},
+            </if>
+            <if test="loginPwd != null">
+                user_loginPwd = #{loginPwd},
+            </if>
+            <if test="name != null">
+                user_name = #{name},
+            </if>
+            <if test="email != null">
+                user_email = #{email},
+            </if>
+            <if test="phone != null">
+                user_phone = #{phone},
+            </if>
+            <if test="address != null">
+                user_address = #{address},
+            </if>
+            <if test="role != null">
+                role_id = #{role.id}
+            </if>
+        </set>
+        WHERE user_id = #{id}
+    </update>
+    <!--删除用户-->
+    <insert id="delUser" parameterType="User">
+        delete from sys_users WHERE user_id = #{id}
+    </insert>
+</mapper>

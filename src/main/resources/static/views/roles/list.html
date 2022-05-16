@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
+<body>
+<div id="head_html">
+
+</div>
+<h1>角色列表</h1>
+<hr>
+<a href="/roles/addPage">新增</a>
+<table id="role_table" width="80%" border="1px">
+    <tr>
+        <th>角色编号</th>
+        <th>角色名称</th>
+        <th>角色描述</th>
+        <th>操作</th>
+    </tr>
+</table>
+</body>
+<script>
+    $(function () {
+        $("#head_html").load("../../html/head.html");
+        // 获取角色列表
+        getRolesList();
+        // 给删除按钮添加事件
+        addDelEvent();
+        // 给删除按钮添加事件
+        addEditEvent();
+    });
+
+    // 获取角色列表
+    function getRolesList() {
+        $.ajax({
+            url: "/roles/list",
+            type: "get",
+            dataType: "json",
+            success: function (rest) {
+                console.log(rest);
+                let tag = ``;
+                for (let i = 0; i < rest.length; i++) {
+                    let role = rest[i];
+                    tag +=
+                        `
+                    <tr>
+                        <td>${role.id}</td>
+                        <td>${role.name}</td>
+                        <td>${role.desc}</td>
+                        <td>
+                            <a href="#" class="del">删除</a>
+                            <a href="#" class="menu">查看权限</a>
+                            <a href="#" class="edit">修改</a>
+                        </td>
+                    </tr>
+                    `;
+                }
+                $("#role_table").append(tag);
+            }
+        })
+    }
+
+    // 给删除按钮添加事件
+    function addDelEvent() {
+        $("#role_table").on("click", ".del", function (event) {
+            event.preventDefault();
+            console.log(123);
+            let del_id = $(this).parent().parent().children("td").eq(0).text();
+            console.log(del_id);
+            $.ajax({
+                url: "/roles/role/" + del_id,
+                type: "delete",
+                success: function (rest) {
+                    console.log("角色删除成功");
+                }
+            })
+        });
+    }
+
+    function addEditEvent() {
+        $("#role_table").on("click", ".edit", function (event) {
+            event.preventDefault();
+            let edit_id = $(this).parent().parent().children("td").eq(0).text();
+            console.log(edit_id);
+            sessionStorage.setItem("edit_id",edit_id);
+            window.location.href = "/roles/editPage/"+edit_id;
+        });
+
+    }
+
+
+</script>
+</html>

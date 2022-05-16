@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzr.dao.RoleMapper">
+    <resultMap id="roleResultMap" type="Role">
+        <id property="id" column="role_id"/>
+        <result property="name" column="role_name"/>
+        <result property="desc" column="role_desc"/>
+    </resultMap>
+    <!-- 获取角色列表 -->
+    <select id="getAll" resultMap="roleResultMap" >
+        select * from sys_roles
+    </select>
+    <!-- 根据Id获取角色 -->
+    <select id="getById" resultMap="roleResultMap" >
+        select * from sys_roles WHERE role_id = #{id}
+    </select>
+    <!--添加角色-->
+    <insert id="addRole" parameterType="Role">
+        INSERT INTO sys_roles(role_name,role_desc)VALUES(#{name},#{desc})
+    </insert>
+    <!--修改角色-->
+    <update id="setRole" parameterType="Role">
+        UPDATE sys_roles
+        <set>
+            <if test="name != null">
+                role_name = #{name},
+            </if>
+            <if test="desc != null">
+                role_desc = #{desc}
+            </if>
+        </set>
+        WHERE role_id = #{id}
+    </update>
+    <!--删除角色-->
+    <delete id="delRole" parameterType="Role">
+        delete from sys_roles WHERE role_id = #{id}
+    </delete>
+    <!-- 修改角色菜单 -->
+    <delete id="delRoleAndMenu">
+        delete from sys_roles_menus WHERE role_id = #{id}
+    </delete>
+    <!-- 修改角色菜单 -->
+    <insert id="addRoleAndMenu">
+        insert into sys_roles_menus(role_id,menu_id) VALUES(#{role_id},#{menu_id})
+    </insert>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzr.dao.MenuMapper">
+    <resultMap id="menuResultMap" type="Menu">
+        <id property="id" column="menu_id"/>
+        <result property="name" column="menu_name"/>
+        <result property="url" column="menu_url"/>
+        <result property="desc" column="menu_desc"/>
+        <result property="order" column="menu_order"/>
+        <association property="parentMenu" column="menu_pid" select="getById" fetchType="lazy"/>
+    </resultMap>
+    <!-- 获取菜单列表 -->
+    <select id="getAll" resultMap="menuResultMap">
+      select * from sys_menus
+    </select>
+    <!-- 根据Id获取菜单 -->
+    <select id="getById" resultMap="menuResultMap">
+        select * from sys_menus WHERE menu_id = #{id}
+    </select>
+    <!-- 根据Pid获取子菜单 -->
+    <select id="getByPid" resultMap="menuResultMap">
+        select * from sys_menus WHERE menu_pid = #{id}
+    </select>
+    <!-- 根据角色ID获取所有菜单权限 -->
+    <select id="getByRoleId" resultMap="menuResultMap">
+        select m.* from
+        sys_menus as m,
+        sys_roles_menus as rm,
+        sys_roles as r
+        where
+        m.menu_id = rm.menu_id
+        and
+        r.role_id = rm.role_id
+        and
+        r.role_id = #{id};
+    </select>
+</mapper>

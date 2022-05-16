@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
+<body>
+<div id="head_html"></div>
+    <form>
+        <label for="loginId">用户名:</label>
+        <input type="text" name="loginId" id="loginId"/>
+        <label for="loginPwd">密码:</label>
+        <input type="password" name="loginPwd" id="loginPwd"/>
+        <input type="submit" id="submit">
+    </form>
+</body>
+<script>
+    $(function () {
+        $("#head_html").load("../html/head.html");
+        $("#submit").on("click",function (event) {
+            // 取消对象的默认事件
+            event.preventDefault();
+            let loginId = $("#loginId").val();
+            let loginPwd = $("#loginPwd").val();
+            let data = {
+              "loginId":loginId,
+              "loginPwd":loginPwd,
+            };
+            $.ajax({
+                url:"/users/login",
+                method:"post",
+                data:JSON.stringify(data),
+                contentType: "application/json",
+                dataType:"json",
+                success:function (rest) {
+                    console.log(rest);
+                    if(rest.code === 2000){
+                        let user = rest.data;
+                        console.log("登陆成功");
+                        console.log(user);
+                        sessionStorage.setItem("user",JSON.stringify(user));
+                        window.location.href = "/users/listPage";
+                    }
+                },
+                catch:function (error) {
+                    console.log(error);
+                }
+            })
+        })
+    })
+</script>
+</html>

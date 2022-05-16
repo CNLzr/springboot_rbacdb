@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
+<body>
+<div id="head_html"></div>
+<h1>用户新增页面</h1>
+<hr>
+<form action="/users/user" method="post">
+    <label for="loginId">用户名:</label>
+    <input type="text" name="loginId" id="loginId">
+    <br>
+    <label for="loginPwd">密码:</label>
+    <input type="password" name="loginPwd" id="loginPwd">
+    <br>
+    <label for="name">姓名:</label>
+    <input type="text" name="name" id="name">
+    <br>
+    <label for="email">邮箱:</label>
+    <input type="text" name="email" id="email">
+    <br>
+    <label for="phone">手机号码:</label>
+    <input type="text" name="phone" id="phone">
+    <br>
+    <label for="address">地址:</label>
+    <input type="text" name="address" id="address">
+    <br>
+    <label for="roleId">角色:</label>
+    <select id="roleId" name="roleId">
+
+    </select>
+    <input type="submit" id="addBtn" value="提交">
+</form>
+</body>
+<script>
+    $(function () {
+        $("#head_html").load("../../html/head.html");
+        // 获取角色列表
+        getRoleList();
+        setAddBtnEvent();
+    });
+    // 设置新增用户按钮事件
+    function setAddBtnEvent() {
+        $("#addBtn").on("click",function (event) {
+            event.preventDefault();
+            let data = {
+                "loginId":$("#loginId").val(),
+                "loginPwd":$("#loginPwd").val(),
+                "name":$("#name").val(),
+                "email":$("#email").val(),
+                "phone":$("#phone").val(),
+                "address":$("#address").val(),
+                "role":{
+                    "id":$("#roleId").val()
+                }
+            };
+            $.ajax({
+                url:"/users/user",
+                type: "post",
+                data:JSON.stringify(data),
+                dataType: "json",
+                contentType:"application/json",
+                success:function (rest) {
+                    console.log(rest);
+                    if(rest.code === 2000){
+                        window.location.href = "/users/listPage";
+                    }
+                },
+                catch:function (error) {
+                    console.log(error);
+                    alert("用户新增失败")
+                }
+            })
+        })
+    }
+    // 获取角色列表
+    function getRoleList() {
+        $.ajax({
+            url: "/roles/list",
+            type:"get",
+            dataType:"json",
+            success:function (rest) {
+                let op = ``;
+                for(let i=0;i<rest.length;i++){
+                    console.log(rest[i]);
+                    let role = rest[i];
+                    op += `<option value="${role.id}">${role.name}</option>`;
+                }
+                $("#roleId").append(op);
+            }
+        });
+    }
+</script>
+</html>

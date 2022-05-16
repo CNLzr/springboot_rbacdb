@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
+<body>
+<div id="head_html">
+
+</div>
+<h1>角色新增页面</h1>
+<hr>
+<form action="/roles/role" method="post">
+    <label for="name">角色名:</label>
+    <input type="text" name="name" id="name">
+    <label for="desc">角色描述:</label>
+    <input type="text" name="desc" id="desc">
+    <input type="submit" id="addBtn" value="提交">
+</form>
+</body>
+<script>
+    $(function () {
+        $("#head_html").load("../../html/head.html");
+        $("#addBtn").on("click",function (event) {
+            event.preventDefault();
+            let name = $("#name").val();
+            let desc = $("#desc").val();
+            let data = {
+                "name":name,
+                "desc":desc
+            };
+            $.ajax({
+                url:"/role",
+                type:"post",
+                data:JSON.stringify(data),
+                contentType:"application/json",
+                dataType:"json",
+                success:function (rest) {
+                    console.log(rest);
+                    window.location.href = "/roles/listPage"
+                },
+                catch:function (error) {
+                    console.log(error);
+                    alert("角色新增失败")
+                }
+            })
+        })
+    });
+</script>
+</html>

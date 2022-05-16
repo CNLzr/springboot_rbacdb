@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
+<body>
+<div id="head_html"></div>
+<h1>角色修改页面</h1>
+<hr>
+<form action="" method="post">
+    <label for="id">角色编号:</label>
+    <b id="id"></b>
+    <br>
+    <label for="name">角色名:</label>
+    <input type="text" name="name" id="name">
+    <br>
+    <label for="desc">角色描述:</label>
+    <input type="text" name="desc" id="desc">
+    <br>
+    <input type="submit" id="btn">
+</form>
+</body>
+<script>
+    $(function () {
+        $(function () {
+            $("#head_html").load("../../html/head.html");
+        });
+        getRole();
+        addBtnEvent();
+    });
+
+    function getRole() {
+        let edit_id = sessionStorage.getItem("edit_id");
+        $("#id").text(edit_id);
+        $.ajax({
+            url:"/roles/role/"+edit_id,
+            type:"get",
+            dataType:"json",
+            success:function (rest) {
+                console.log(rest);
+                let role = rest.data;
+                $("#id").text(edit_id);
+                $("#name").val(role.name);
+                $("#desc").val(role.desc);
+            }
+        });
+    }
+
+    function addBtnEvent() {
+        $("#btn").on("click",function (event) {
+            event.preventDefault();
+            let edit_id = $("#id").text();
+            let name = $("#name").val();
+            let desc = $("#desc").val();
+            let data = {
+                "id":edit_id,
+                "name":name,
+                "desc":desc
+            };
+            $.ajax({
+                url:"/roles/role",
+                type: "put",
+                data: JSON.stringify(data),
+                contentType:"application/json",
+                dataType: "json",
+                success:function (rest) {
+                    console.log(rest);
+                    if(rest.code === 2000){
+                        window.location.href = "/roles/listPage"
+                    }
+                }
+            })
+        });
+    }
+</script>
+</html>
