@@ -41,8 +41,8 @@
             success: function (rest) {
                 console.log(rest);
                 let tag = ``;
-                for (let i = 0; i < rest.length; i++) {
-                    let role = rest[i];
+                for (let i = 0; i < rest.data.length; i++) {
+                    let role = rest.data[i];
                     tag +=
                         `
                     <tr>
