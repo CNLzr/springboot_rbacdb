@@ -1,5 +1,6 @@
 package com.lzr.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.lzr.model.Menu;
 import com.lzr.model.Role;
 import com.lzr.model.User;
@@ -73,8 +74,9 @@ public class RoleController {
      * @param id 前端传入的id值参数
      * @return 删除成功，客户端重定向到角色列表页面
      */
+    @ResponseBody
     @DeleteMapping(value = "/role/{id}")
-    public APIResult del(@PathVariable("id") Integer id){
+    public APIResult deleteRole(@PathVariable("id") Integer id){
         List<User> list = userService.getByRoleId(id);
         System.out.println(list);
         if(!list.isEmpty()){
@@ -83,7 +85,7 @@ public class RoleController {
         }
         Role role = new Role();
         role.setId(id);
-//        roleService.delRole(role);
+        roleService.delRole(role);
         System.out.println("删除Role，id=" + id);
         return APIResult.success();
     }
@@ -95,7 +97,7 @@ public class RoleController {
      */
     @PostMapping(value = "/role")
     @ResponseBody
-    public APIResult add(Role role){
+    public APIResult addRole(@RequestBody Role role){
         System.out.println("新增Role,Role="+role);
         boolean flag = roleService.addRole(role);
         if(flag){
@@ -109,9 +111,23 @@ public class RoleController {
      * @return
      */
     @ResponseBody
-    @GetMapping(value = "/list")
-    public APIResult list(){
-        List<Role> list = roleService.getAll();
+    @GetMapping(value = "/list/{pageNum}/{pageSize}")
+    public APIResult list(@PathVariable Integer pageNum,@PathVariable Integer pageSize){
+        PageInfo<Role> list = roleService.getAll(pageNum, pageSize);
+        System.out.println(list);
+        return APIResult.success(list);
+    }
+
+    /**
+     * 根据条件获取角色,搜索角色
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/role/search")
+    public APIResult search(@RequestBody Role role){
+        System.out.println(role);
+        List<Role> list = roleService.getByCondition(role);
+        System.out.println(list);
         return APIResult.success(list);
     }
 

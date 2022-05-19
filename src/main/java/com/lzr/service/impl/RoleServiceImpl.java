@@ -1,5 +1,7 @@
 package com.lzr.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lzr.dao.RoleMapper;
 import com.lzr.model.Role;
 import com.lzr.service.RoleService;
@@ -54,8 +56,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional(readOnly =true)
     @Override
-    public List<Role> getAll() {
-        return roleMapper.getAll();
+    public PageInfo<Role> getAll(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<Role> list = roleMapper.getAll();
+        PageInfo<Role> page_list = new PageInfo<Role>(list);
+        return page_list;
+    }
+
+    @Override
+    public List<Role> getByCondition(Role role) {
+        List<Role> list = roleMapper.getByCondition(role);
+        return list;
     }
 
     @Override

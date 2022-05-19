@@ -15,8 +15,6 @@ public class RoleTest {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         RoleService roleService = context.getBean("roleService", RoleService.class);
         System.out.println(roleService);
-        List<Role> list = roleService.getAll();
-        System.out.println(list);
     }
 
     @Test
@@ -42,21 +40,15 @@ public class RoleTest {
     public void testAdd() {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         RoleService roleService = context.getBean("roleService", RoleService.class);
-        List<Role> list = roleService.getAll();
-        System.out.println(list);
     }
     @Test
     public void testUpdate() {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         RoleService roleService = context.getBean("roleService", RoleService.class);
-        List<Role> list = roleService.getAll();
-        System.out.println(list);
     }
     @Test
     public void testDelete() {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         RoleService roleService = context.getBean("roleService", RoleService.class);
-        List<Role> list = roleService.getAll();
-        System.out.println(list);
     }
 }

@@ -10,3 +10,9 @@ mybatis:
   type-aliases-package: com.lzr.model
 server:
   port: 8088
+pagehelper:
+  autoRuntimeDialect: true
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
