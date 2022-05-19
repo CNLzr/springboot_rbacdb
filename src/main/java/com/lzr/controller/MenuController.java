@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin
 @Controller
 @RequestMapping("/menus")
 public class MenuController {
@@ -24,7 +24,6 @@ public class MenuController {
      * 获取菜单列表
      * @return
      */
-    @CrossOrigin
     @ResponseBody
     @GetMapping("/list")
     public APIResult list(){

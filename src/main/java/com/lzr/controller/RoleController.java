@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @Controller
 @RequestMapping("/roles")
 public class RoleController {
@@ -109,9 +110,9 @@ public class RoleController {
      */
     @ResponseBody
     @GetMapping(value = "/list")
-    public List<Role> list(){
+    public APIResult list(){
         List<Role> list = roleService.getAll();
-        return list;
+        return APIResult.success(list);
     }
 
     /**
