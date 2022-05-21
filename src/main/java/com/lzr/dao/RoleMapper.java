@@ -15,5 +15,6 @@ public interface RoleMapper {
     boolean delRoleAndMenu(Integer role_Id);
     List<Role> getAll();
     List<Role> getRoleAndMenu();
+    List<Role> getByCondition(Role role);
     Role getById(Integer id);
 }
