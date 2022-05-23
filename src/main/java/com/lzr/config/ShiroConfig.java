@@ -14,4 +14,6 @@ public class ShiroConfig implements WebMvcConfigurer {
         defaultWebSecurityManager.setRealm(myRealm);
         return  defaultWebSecurityManager;
     }
+
+
 }
